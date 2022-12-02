@@ -38,7 +38,6 @@ void insertNodeToArray(data **array, int arraySize)
     for (int i = 0; i < arraySize; i++)
     {
         array[i] = makeNode();
-        // printf("%d ", array[i]->priority);
     }
 }
 
@@ -65,43 +64,37 @@ void popBiggestPriority(data **array, int arraySize)
 
     for (int i = 0; i < arraySize; i++)
     {
-        printf("%d ", array[i]->priority);
         array[i] = NULL;
     }
 }
 
-int main(void)
+void arrayExecution(int arraySize)
 {
     srand(time(NULL));
     double insertTime, popTime, totalTime;
-
     clock_t start, end;
 
-    int arraySize;
-    scanf("%d", &arraySize);
-
     data **array = makeArray(arraySize);
-    printf("Insert : ");
     start = clock();
     insertNodeToArray(array, arraySize);
-
     end = clock();
 
     insertTime = (double)(end - start);
-    printf("\nInsert에 소요 시간: %lfms\n", insertTime);
-
-    printf("\nPop : ");
-
+    printf("\nArray - Insert에 소요 시간: %.0lfms", insertTime);
     start = clock();
-    selectionSort(array, arraySize);
     popBiggestPriority(array, arraySize);
     end = clock();
-
     popTime = (double)(end - start);
-    printf("\nPop에 소요 시간: %lfms\n", popTime);
-
+    printf("\nArray - Pop에 소요 시간: %.0lfms", popTime);
     totalTime = insertTime + popTime;
-    printf("\n전체 소요 시간!: %lfms", totalTime);
+    printf("\nArray - 전체 소요 시간!: %.0lfms", totalTime);
+}
 
+int main(void)
+{
+    int arraySize;
+    printf("Insert the number of inputs: ");
+    scanf("%d", &arraySize);
+    arrayExecution(arraySize);
     return 0;
 }
