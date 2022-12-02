@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-typedef struct bstNode *treePointer;
+typedef struct bstNode *bstPointer;
 
 typedef struct data
 {
@@ -13,8 +13,8 @@ typedef struct data
 typedef struct bstNode
 {
     data data;
-    treePointer leftChild;
-    treePointer rightChild;
+    bstPointer leftChild;
+    bstPointer rightChild;
 } bstNode;
 
 char *generateRandomString(void)
@@ -38,9 +38,9 @@ data *makeRandomData(void)
     return d;
 }
 
-treePointer makeTreeNode(void)
+bstPointer makeTreeNode(void)
 {
-    treePointer treePointerPointer = (treePointer)malloc(sizeof(bstNode));
+    bstPointer treePointerPointer = (bstPointer)malloc(sizeof(bstNode));
 
     treePointerPointer->data = *makeRandomData();
     treePointerPointer->leftChild = NULL;
@@ -49,7 +49,7 @@ treePointer makeTreeNode(void)
     return treePointerPointer;
 }
 
-int insertTreeNode(treePointer *root, treePointer insertedNode)
+int insertNodeToBST(bstPointer *root, bstPointer insertedNode)
 {
     if (*root == NULL)
     {
@@ -59,40 +59,40 @@ int insertTreeNode(treePointer *root, treePointer insertedNode)
     {
         if (insertedNode->data.priority >= (*root)->data.priority)
         {
-            insertTreeNode(&(*root)->rightChild, insertedNode);
+            insertNodeToBST(&(*root)->rightChild, insertedNode);
         }
         else
         {
-            insertTreeNode(&(*root)->leftChild, insertedNode);
+            insertNodeToBST(&(*root)->leftChild, insertedNode);
         }
     }
     return insertedNode->data.priority;
 }
 
-void deleteMaxPriorityNode(treePointer *root)
+void popBiggestPriorityFromBST(bstPointer *root)
 {
     // 오른 자식이 없으면 루트가 가장 큰거임.
     if ((*root)->rightChild == NULL)
     {
         int result = (*root)->data.priority;
-        treePointer temp = *root;
+        bstPointer temp = *root;
         *root = (*root)->leftChild;
         // printf("%d ", result);
     }
     // 오른 자식이 있는 경우 그 오른자식을 재귀적으로 계속 타고가서 없앰
     else
     {
-        deleteMaxPriorityNode(&((*root)->rightChild));
+        popBiggestPriorityFromBST(&((*root)->rightChild));
     }
 }
 
-int main(void)
+void bstExecution(int arraySize)
 {
     srand(time(NULL));
     double insertTime, popTime, totalTime;
 
     clock_t start, end;
-    treePointer root = NULL;
+    bstPointer root = NULL;
 
     int arraySize;
     scanf("%d", &arraySize);
@@ -100,32 +100,33 @@ int main(void)
     // insert
     start = clock();
     ////
-    printf("insert:  ");
     for (int i = 0; i < arraySize; i++)
     {
-        insertTreeNode(&root, makeTreeNode());
+        insertNodeToBST(&root, makeTreeNode());
         // printf("%d ", insertTreeNode(&root, makeTreeNode()));
     }
     end = clock();
 
     insertTime = (double)(end - start);
-    printf("\nInsert에 소요 시간: %lfms\n", insertTime);
+    printf("\nBinary Search Tree - Insert에 소요 시간: %.0lfms", insertTime);
 
     // pop
-    printf("\npop: ");
-
     start = clock();
     for (int i = 0; i < arraySize; i++)
     {
-        deleteMaxPriorityNode(&root);
+        popBiggestPriorityFromBST(&root);
     }
     end = clock();
     popTime = (double)(end - start);
-    printf("\nPop에 소요 시간: %lfms", popTime);
+    printf("\nBinary Search Tree - Pop에 소요 시간: %.0lfms", popTime);
 
     // total
     totalTime = insertTime + popTime;
-    printf("\n\n전체 소요 시간: %lfms", totalTime);
+    printf("\nBinary Search Tree - 전체 소요 시간: %.0lfms", totalTime);
+}
+
+int main(void)
+{
 
     return 0;
 }

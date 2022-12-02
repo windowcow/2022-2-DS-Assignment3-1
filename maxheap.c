@@ -35,7 +35,7 @@ data *makeRandomData(void)
     return d;
 }
 
-void push(data d, int *nodeIndex)
+void insertNodeToMaxHeap(data d, int *nodeIndex)
 {
     int i;
 
@@ -49,7 +49,7 @@ void push(data d, int *nodeIndex)
     heap[i] = d;
 }
 
-data *popHeap(int *nodeIndex)
+data *popBiggestNodeFromHeap(int *nodeIndex)
 {
     int parent, child;
     data item, temp;
@@ -78,7 +78,7 @@ data *popHeap(int *nodeIndex)
     return &item;
 }
 
-int main(void)
+void heapExecution(int arraySize)
 {
     srand(time(NULL));
     int n = 0;
@@ -87,9 +87,6 @@ int main(void)
     double insertTime, popTime, totalTime;
 
     clock_t start, end;
-    
-    int arraySize;
-    scanf("%d", &arraySize);
 
     // insert
     start = clock();
@@ -99,7 +96,7 @@ int main(void)
     {
         d = makeRandomData();
         // printf("%d ", d->priority);
-        push(*d, &n);
+        insertNodeToMaxHeap(*d, &n);
     }
     end = clock();
 
@@ -112,7 +109,53 @@ int main(void)
     start = clock();
     for (int i = 0; i < arraySize; i++)
     {
-        d = popHeap(&n);
+        d = popBiggestNodeFromHeap(&n);
+        // printf("%d ", d->priority);
+    }
+    end = clock();
+    popTime = (double)(end - start);
+    printf("\nPop에 소요 시간: %lfms", popTime);
+
+    // total
+    totalTime = insertTime + popTime;
+    printf("\n\n전체 소요 시간: %lfms", totalTime);
+}
+
+int main(void)
+{
+    srand(time(NULL));
+    int n = 0;
+    data *d;
+
+    double insertTime, popTime, totalTime;
+
+    clock_t start, end;
+
+    int arraySize;
+    scanf("%d", &arraySize);
+
+    // insert
+    start = clock();
+    ////
+    printf("insert:  ");
+    for (int i = 0; i < arraySize; i++)
+    {
+        d = makeRandomData();
+        // printf("%d ", d->priority);
+        insertNodeToMaxHeap(*d, &n);
+    }
+    end = clock();
+
+    insertTime = (double)(end - start);
+    printf("\nInsert에 소요 시간: %lfms\n", insertTime);
+
+    // pop
+    printf("\npop: ");
+
+    start = clock();
+    for (int i = 0; i < arraySize; i++)
+    {
+        d = popBiggestNodeFromHeap(&n);
         // printf("%d ", d->priority);
     }
     end = clock();

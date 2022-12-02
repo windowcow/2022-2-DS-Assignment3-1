@@ -14,11 +14,11 @@ typedef struct data
     char *c;
 } data;
 
-typedef struct node
+typedef struct linkedNode
 {
     data *data;
-    struct node *next;
-} node;
+    struct linkedNode *next;
+} linkedNode;
 
 char *generateRandomString(void)
 {
@@ -41,9 +41,9 @@ data *makeRandomData(void)
     return d;
 }
 
-node *makeLinkedNode(void)
+linkedNode *makeLinkedNode(void)
 {
-    node *linkedNodePointer = (node *)malloc(sizeof(node));
+    linkedNode *linkedNodePointer = (linkedNode *)malloc(sizeof(linkedNode));
 
     linkedNodePointer->data = makeRandomData();
     linkedNodePointer->next = NULL;
@@ -51,11 +51,11 @@ node *makeLinkedNode(void)
     return linkedNodePointer;
 }
 
-void insertNode(node **headPointer)
+void insertNodeToLinkedList(linkedNode **headPointer)
 {
-    node *newNode = makeLinkedNode();
+    linkedNode *newNode = makeLinkedNode();
     // printf("%d ", newNode->data->priority);
-    node *temp = *headPointer;
+    linkedNode *temp = *headPointer;
 
     if (*headPointer == NULL)
     {
@@ -68,11 +68,11 @@ void insertNode(node **headPointer)
     }
 }
 
-void deleteTopPriority(node **headPointer)
+void popBiggestPriorityFromLinkedList(linkedNode **headPointer)
 {
-    node *temp = *headPointer;
-    node *temp2 = *headPointer;
-    node *tempMax = *headPointer;
+    linkedNode *temp = *headPointer;
+    linkedNode *temp2 = *headPointer;
+    linkedNode *tempMax = *headPointer;
 
     if (*headPointer == NULL)
     {
@@ -103,44 +103,44 @@ void deleteTopPriority(node **headPointer)
     // printf("%d ", tempMax->data->priority);
 }
 
-int main(void)
+void linkedListExecution(int arraySize)
 {
-    srand(time(NULL));
     double insertTime, popTime, totalTime;
 
     clock_t start, end;
-    node *head = NULL;
+    linkedNode *head = NULL;
 
     int arraySize;
     scanf("%d", &arraySize);
 
     // insert
     start = clock();
-    printf("Insert : ");
     for (int i = 0; i < arraySize; i++)
     {
-        insertNode(&head);
+        insertNodeToLinkedList(&head);
     }
     end = clock();
 
     insertTime = (double)(end - start);
-    printf("\nInsert에 소요 시간: %lfms\n", insertTime);
-
-    // pop
-    printf("\npop: ");
+    printf("\nLinked List - Insert에 소요 시간: %.0lfms", insertTime);
 
     start = clock();
     for (int i = 0; i < arraySize; i++)
     {
-        deleteTopPriority(&head);
+        popBiggestPriorityFromLinkedList(&head);
     }
     end = clock();
     popTime = (double)(end - start);
-    printf("\nPop에 소요 시간: %lfms", popTime);
+    printf("\nLinked List - Pop에 소요 시간: %.0lfms", popTime);
 
     // total
     totalTime = insertTime + popTime;
-    printf("\n\n전체 소요 시간: %lfms", totalTime);
+    printf("\nLinked List - 전체 소요 시간: %.0lfms", totalTime);
+}
 
+int main(void)
+{
+    srand(time(NULL));
+    linkedListExecution(1000);
     return 0;
 }
