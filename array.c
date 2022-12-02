@@ -43,7 +43,7 @@ char *generateRandomString(void)
 data *makeRandomData(void)
 {
     data *n = malloc(sizeof(data));
-    n->priority = rand() % 1000;
+    n->priority = rand() % 1000000;
     n->c = generateRandomString();
     return n;
 }
@@ -54,26 +54,19 @@ data **makeArray(int arraySize)
     return array;
 }
 
-void insertNodeToArray(data **array, int arraySize)
+void pushNodeToArray(data **array, int arraySize)
 {
-    for (int i = 0; i < arraySize; i++)
+    array[0] = makeRandomData();
+    for (int i = 1; i < arraySize; i++)
     {
         array[i] = makeRandomData();
-    }
-}
-
-void selectionSort(data **array, int arraySize)
-{
-    for (int i = 0; i < arraySize; i++)
-    {
-        for (int j = i + 1; j < arraySize; j++)
+        for (int j = 0; j < i; j++)
         {
-            if (array[i]->priority < array[j]->priority)
+            if (array[i]->priority > array[j]->priority)
             {
-                // 바꾸기
-                data *tempData = array[i];
+                data *temp = array[i];
                 array[i] = array[j];
-                array[j] = tempData;
+                array[j] = temp;
             }
         }
     }
@@ -81,8 +74,6 @@ void selectionSort(data **array, int arraySize)
 
 void popBiggestPriorityFromArray(data **array, int arraySize)
 {
-    selectionSort(array, arraySize);
-
     for (int i = 0; i < arraySize; i++)
     {
         array[i] = NULL;
@@ -97,7 +88,7 @@ void arrayExecution(int arraySize)
 
     data **array = makeArray(arraySize);
     start = clock();
-    insertNodeToArray(array, arraySize);
+    pushNodeToArray(array, arraySize);
     end = clock();
 
     insertTime = (double)(end - start);
@@ -121,10 +112,9 @@ linkedNode *makeLinkedNode(void)
     return linkedNodePointer;
 }
 
-void insertNodeToLinkedList(linkedNode **headPointer)
+void pushNodeToLinkedList(linkedNode **headPointer)
 {
     linkedNode *newNode = makeLinkedNode();
-    // printf("%d ", newNode->data->priority);
     linkedNode *temp = *headPointer;
 
     if (*headPointer == NULL)
@@ -170,7 +160,6 @@ void popBiggestPriorityFromLinkedList(linkedNode **headPointer)
             temp2->next = tempMax->next;
         }
     }
-    // printf("%d ", tempMax->data->priority);
 }
 
 void linkedListExecution(int arraySize)
@@ -184,7 +173,7 @@ void linkedListExecution(int arraySize)
     start = clock();
     for (int i = 0; i < arraySize; i++)
     {
-        insertNodeToLinkedList(&head);
+        pushNodeToLinkedList(&head);
     }
     end = clock();
 
@@ -294,6 +283,7 @@ void insertNodeToMaxHeap(data d, int *nodeIndex)
     int i;
 
     i = ++(*nodeIndex);
+    // printf("%d ", d.priority);
 
     while ((i != 1) && (d.priority > maxHeap[i / 2].priority))
     {
@@ -329,6 +319,7 @@ data *popBiggestNodeFromHeap(int *nodeIndex)
         child *= 2;
     }
     maxHeap[parent] = temp;
+    // printf("%d ", item.priority);
     return &item;
 }
 
@@ -375,17 +366,17 @@ void heapExecution(int arraySize)
 
 int main(void)
 {
-    int arraySize;
+    int inputSize;
     printf("Insert the number of inputs: ");
-    scanf("%d", &arraySize);
-    printf("\n----------------------------------------");
-    arrayExecution(arraySize);
-    printf("\n----------------------------------------");
-    linkedListExecution(arraySize);
-    printf("\n----------------------------------------");
-    heapExecution(arraySize);
-    printf("\n----------------------------------------");
-    bstExecution(arraySize);
+    scanf("%d", &inputSize);
+    // printf("----------------------------------------");
+    // arrayExecution(arraySize);
+    // printf("----------------------------------------");
+    // linkedListExecution(arraySize);
+    // printf("----------------------------------------");
+    // heapExecution(arraySize);
+    printf("----------------------------------------");
+    bstExecution(inputSize);
 
     return 0;
 }
